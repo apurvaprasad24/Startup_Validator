@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Validate·AI — Startup Idea Validator</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
+
+*{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --black:#080808;
+  --white:#f4f2ee;
+  --gray:#b0aca4;
+  --gray2:#2a2825;
+  --gray3:#1a1917;
+  --accent:#e8ff47;
+  --border:rgba(244,242,238,.1);
+  --font:'Space Grotesk',sans-serif;
+  --mono:'Space Mono',monospace;
+}
+
+body{
+  background:var(--black);
+  color:var(--white);
+  font-family:var(--font);
+  font-size:15px;
+  line-height:1.6;
+  min-height:100vh;
+}
+
+.page{max-width:900px;margin:0 auto;padding:0 32px 100px}
+
+nav{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:28px 0;border-bottom:1px solid var(--border);
+}
+.nav-logo{font-family:var(--mono);font-size:13px;font-weight:700;letter-spacing:.05em;color:var(--white)}
+.nav-tag{
+  font-family:var(--mono);font-size:10px;color:var(--gray);
+  border:1px solid var(--border);padding:4px 10px;border-radius:2px;letter-spacing:.08em;
+}
+
+.hero{padding:80px 0 60px;border-bottom:1px solid var(--border)}
+.hero-meta{display:flex;align-items:center;gap:16px;margin-bottom:32px}
+.hero-code{font-family:var(--mono);font-size:11px;color:var(--gray);letter-spacing:.1em}
+.hero-dot{width:5px;height:5px;background:var(--accent);border-radius:50%;animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+.hero-status{font-family:var(--mono);font-size:10px;color:var(--accent);letter-spacing:.1em}
+
+h1{
+  font-size:clamp(42px,7vw,80px);
+  font-weight:700;
+  line-height:1;
+  letter-spacing:-.04em;
+  margin-bottom:24px;
+}
+h1 em{font-style:normal;color:var(--gray)}
+.hero-desc{font-size:16px;font-weight:300;color:var(--gray);max-width:520px;line-height:1.7}
+
+.section-label{
+  font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--gray);display:flex;align-items:center;gap:12px;
+  padding:40px 0 20px;
+}
+.section-label::after{content:'';flex:1;height:1px;background:var(--border)}
+
+.api-block{
+  border:1px solid var(--border);border-radius:4px;
+  padding:28px;margin-bottom:2px;background:var(--gray3);
+}
+.api-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;flex-wrap:wrap;gap:8px}
+.api-title{font-size:13px;font-weight:600;letter-spacing:.02em}
+.api-badge{
+  font-family:var(--mono);font-size:9px;letter-spacing:.12em;
+  border:1px solid rgba(232,255,71,.3);color:var(--accent);
+  padding:3px 8px;border-radius:2px;
+}
+.api-row{display:flex;gap:0}
+.api-input{
+  flex:1;background:var(--black);border:1px solid var(--border);
+  border-right:none;border-radius:3px 0 0 3px;
+  color:var(--white);font-family:var(--mono);font-size:13px;
+  padding:12px 16px;outline:none;transition:border-color .2s;
+}
+.api-input:focus{border-color:rgba(232,255,71,.4)}
+.api-input::placeholder{color:var(--gray);opacity:.5}
+.api-link-btn{
+  background:var(--gray2);border:1px solid var(--border);
+  border-left:none;border-radius:0 3px 3px 0;
+  color:var(--gray);font-family:var(--mono);font-size:11px;
+  padding:12px 16px;cursor:pointer;white-space:nowrap;
+  text-decoration:none;display:flex;align-items:center;
+  transition:color .2s;
+}
+.api-link-btn:hover{color:var(--white)}
+.api-hint{font-size:12px;color:var(--gray);margin-top:10px;opacity:.7}
+
+.idea-block{
+  border:1px solid var(--border);border-radius:4px;
+  padding:28px;background:var(--gray3);
+}
+.idea-block textarea{
+  width:100%;background:var(--black);border:1px solid var(--border);
+  border-radius:3px;color:var(--white);font-family:var(--font);
+  font-size:15px;font-weight:300;padding:16px;resize:none;
+  min-height:120px;outline:none;transition:border-color .2s;line-height:1.7;
+}
+.idea-block textarea:focus{border-color:rgba(232,255,71,.3)}
+.idea-block textarea::placeholder{color:var(--gray);opacity:.5}
+
+.examples{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.ex-btn{
+  font-family:var(--mono);font-size:10px;letter-spacing:.06em;
+  border:1px solid var(--border);background:transparent;
+  color:var(--gray);padding:6px 12px;border-radius:2px;
+  cursor:pointer;transition:all .2s;
+}
+.ex-btn:hover{border-color:rgba(232,255,71,.4);color:var(--accent)}
+
+.cta-row{display:flex;align-items:center;gap:20px;padding:32px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin:2px 0 0;flex-wrap:wrap}
+.submit-btn{
+  display:flex;align-items:center;gap:10px;
+  background:var(--accent);color:var(--black);
+  font-family:var(--font);font-size:14px;font-weight:700;
+  padding:14px 28px;border:none;border-radius:3px;
+  cursor:pointer;transition:all .2s;letter-spacing:.01em;flex-shrink:0;
+}
+.submit-btn:hover:not(:disabled){background:#d4eb30;transform:translateY(-1px)}
+.submit-btn:disabled{opacity:.4;cursor:not-allowed}
+.cta-note{font-family:var(--mono);font-size:10px;color:var(--gray);letter-spacing:.06em;line-height:1.6}
+
+.error-msg{
+  font-family:var(--mono);font-size:12px;color:#ff6b6b;
+  border:1px solid rgba(255,107,107,.2);background:rgba(255,107,107,.05);
+  padding:12px 16px;border-radius:3px;display:none;margin-top:8px;
+}
+.error-msg.show{display:block}
+
+.loading{display:none;padding:80px 0;text-align:center}
+.loading.show{display:block}
+.loader-line{width:200px;height:1px;background:var(--border);margin:0 auto 24px;position:relative;overflow:hidden}
+.loader-line::after{content:'';position:absolute;left:-40%;top:0;width:40%;height:100%;background:var(--accent);animation:slide 1.2s ease-in-out infinite}
+@keyframes slide{to{left:140%}}
+.loading p{font-family:var(--mono);font-size:11px;color:var(--gray);letter-spacing:.1em}
+.loading p em{color:var(--accent);font-style:normal}
+
+.report{display:none}
+.report.show{display:block;animation:fadeUp .4s ease both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+
+.r-header{padding:40px 0 32px;border-bottom:1px solid var(--border)}
+.r-name{font-size:clamp(32px,5vw,56px);font-weight:700;letter-spacing:-.03em;line-height:1;margin-bottom:10px}
+.r-idea{font-size:13px;color:var(--gray);font-weight:300;font-style:italic;margin-bottom:32px;max-width:600px}
+
+.scores{display:flex;gap:0;border:1px solid var(--border);border-radius:4px;overflow:hidden}
+.score-item{flex:1;padding:24px 20px;text-align:center;border-right:1px solid var(--border)}
+.score-item:last-child{border-right:none}
+.s-num{font-family:var(--mono);font-size:36px;font-weight:700;line-height:1;margin-bottom:4px}
+.s-num.hi{color:var(--accent)}
+.s-num.md{color:#f4a623}
+.s-num.lo{color:#ff6b6b}
+.s-label{font-family:var(--mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--gray)}
+
+.r-grid{display:grid;grid-template-columns:1fr 1fr;border-left:1px solid var(--border);border-top:1px solid var(--border);margin-top:-1px}
+@media(max-width:520px){.r-grid{grid-template-columns:1fr}}
+.r-card{border-right:1px solid var(--border);border-bottom:1px solid var(--border);padding:24px}
+.r-card-label{font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--gray);margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.r-card-label span{font-size:16px}
+.r-list{list-style:none;display:flex;flex-direction:column;gap:6px}
+.r-list li{font-size:13px;font-weight:300;color:var(--white);padding:8px 12px;border-left:1px solid var(--border);line-height:1.5;transition:border-color .2s}
+.r-list li:hover{border-color:var(--accent)}
+
+.r-full{border:1px solid var(--border);border-top:none;padding:28px}
+.r-full-label{font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--gray);margin-bottom:12px}
+.r-full-body{font-size:14px;font-weight:300;line-height:1.8;color:rgba(244,242,238,.85)}
+
+.verdict{border:1px solid rgba(232,255,71,.2);border-top:none;background:rgba(232,255,71,.04);padding:28px}
+.verdict-label{font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:10px}
+.verdict-text{font-size:15px;font-weight:400;line-height:1.8}
+
+.reset-row{padding:28px 0;border-top:1px solid var(--border);display:flex;align-items:center;gap:20px;margin-top:-1px}
+.reset-btn{background:transparent;border:1px solid var(--border);color:var(--gray);font-family:var(--mono);font-size:11px;letter-spacing:.06em;padding:10px 20px;border-radius:2px;cursor:pointer;transition:all .2s}
+.reset-btn:hover{border-color:rgba(232,255,71,.4);color:var(--accent)}
+.reset-note{font-family:var(--mono);font-size:10px;color:var(--gray);opacity:.5}
+
+footer{border-top:1px solid var(--border);padding:32px 0;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+.footer-left{font-family:var(--mono);font-size:10px;color:var(--gray);letter-spacing:.06em}
+.footer-right{font-family:var(--mono);font-size:10px;color:var(--gray);opacity:.4;letter-spacing:.06em}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <nav>
+    <span class="nav-logo">VALIDATE<span style="color:var(--accent)">·</span>AI</span>
+    <span class="nav-tag">GSSP-2025 / GEMINI-2.0</span>
+  </nav>
+
+  <div id="input-section">
+    <div class="hero">
+      <div class="hero-meta">
+        <span class="hero-code">IDEA-ANALYSIS-V1</span>
+        <span class="hero-dot"></span>
+        <span class="hero-status">SYSTEM READY</span>
+      </div>
+      <h1>Turn your idea<br><em>into clarity.</em></h1>
+      <p class="hero-desc">Paste your startup concept and get a structured analyst report — viability scores, market fit, competitors, risks, and a go-to-market strategy. Powered by Gemini.</p>
+    </div>
+
+    <div class="section-label">01 — CREDENTIALS</div>
+    <div class="api-block">
+      <div class="api-top">
+        <span class="api-title">Gemini API Key</span>
+        <span class="api-badge">GOOGLE AI STUDIO</span>
+      </div>
+      <div class="api-row">
+        <input class="api-input" type="password" id="api-key" placeholder="AIza···················"/>
+        <a class="api-link-btn" href="https://aistudio.google.com/app/apikey" target="_blank">GET KEY ↗</a>
+      </div>
+      <p class="api-hint">Free tier · 1,500 req/day · No credit card · aistudio.google.com</p>
+    </div>
+
+    <div class="section-label">02 — IDEA INPUT</div>
+    <div class="idea-block">
+      <textarea id="idea-input" placeholder="Describe your startup idea in 1–3 sentences. Be specific about the problem, the audience, and your solution…" rows="5"></textarea>
+      <div class="examples">
+        <button class="ex-btn" onclick="fillEx(0)">↳ EDTECH INDIA</button>
+        <button class="ex-btn" onclick="fillEx(1)">↳ HEALTHTECH TIER-2</button>
+        <button class="ex-btn" onclick="fillEx(2)">↳ FINTECH UPI</button>
+      </div>
+    </div>
+
+    <div class="cta-row">
+      <button class="submit-btn" id="validate-btn" onclick="validate()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        RUN ANALYSIS
+      </button>
+      <span class="cta-note">GEMINI 2.0 FLASH · ~5 SEC · FREE TIER</span>
+    </div>
+    <div class="error-msg" id="error-box"></div>
+  </div>
+
+  <div class="loading" id="loading">
+    <div class="loader-line"></div>
+    <p>ANALYSING WITH <em>GEMINI 2.0</em> · PLEASE WAIT</p>
+  </div>
+
+  <div class="report" id="report"></div>
+
+  <footer>
+    <span class="footer-left">VALIDATE·AI — BUILT ON GOOGLE STARTUP SCHOOL: PROMPT TO PROTOTYPE</span>
+    <span class="footer-right">SCALAR / 2025</span>
+  </footer>
+
+</div>
+
+<script>
+const examples=[
+  "An AI-powered tutoring platform for Class 10-12 students in India that personalises learning paths based on their weak topics, using voice interaction in regional languages.",
+  "A mobile app that connects patients in tier-2 Indian cities with specialist doctors for video consultations, with built-in prescription and medicine delivery integration.",
+  "A micro-investment app for college students in India that rounds up UPI transactions and automatically invests the spare change into index funds with zero minimum balance."
+];
+
+function fillEx(i){document.getElementById('idea-input').value=examples[i]}
+function sc(n){return n>=7?'hi':n>=5?'md':'lo'}
+
+async function validate(){
+  const key=document.getElementById('api-key').value.trim();
+  const idea=document.getElementById('idea-input').value.trim();
+  if(!key){showErr('Enter your Gemini API key to proceed.');return}
+  if(idea.length<20){showErr('Please describe your idea in a bit more detail.');return}
+  hideErr();
+  document.getElementById('input-section').style.display='none';
+  document.getElementById('loading').classList.add('show');
+  document.getElementById('validate-btn').disabled=true;
+
+  const prompt=`You are a senior startup analyst. A founder shared this idea: "${idea}"
+
+Respond ONLY with a valid JSON object. No markdown, no backticks, no extra text.
+{
+  "ideaName": "short punchy product name (2-4 words)",
+  "viabilityScore": <1-10>,
+  "marketScore": <1-10>,
+  "executionScore": <1-10>,
+  "targetAudience": ["segment 1","segment 2","segment 3"],
+  "topCompetitors": ["name + one-line description","name + one-line description","name + one-line description"],
+  "keyRisks": ["risk 1","risk 2","risk 3"],
+  "goToMarket": ["step 1","step 2","step 3"],
+  "uniqueAngle": "2-3 sentences on defensibility and differentiation",
+  "verdict": "2-3 sentences of honest, direct advice for the founder"
+}`;
+
+  try{
+    const res=await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${key}`,
+      {method:'POST',headers:{'Content-Type':'application/json'},
+       body:JSON.stringify({contents:[{parts:[{text:prompt}]}],generationConfig:{temperature:.7,maxOutputTokens:1024}})}
+    );
+    const data=await res.json();
+    if(data.error){throw new Error(data.error.message)}
+    const raw=data.candidates?.[0]?.content?.parts?.[0]?.text||'';
+    const r=JSON.parse(raw.replace(/```json|```/g,'').trim());
+    renderReport(idea,r);
+  }catch(e){
+    document.getElementById('input-section').style.display='block';
+    showErr('Error: '+(e.message||'Could not parse response. Try again.'));
+    console.error(e);
+  }finally{
+    document.getElementById('loading').classList.remove('show');
+    document.getElementById('validate-btn').disabled=false;
+  }
+}
+
+function renderReport(idea,r){
+  const snippet=idea.length>110?idea.slice(0,110)+'…':idea;
+  document.getElementById('report').innerHTML=`
+    <div class="r-header">
+      <div class="r-name">${r.ideaName}</div>
+      <div class="r-idea">"${snippet}"</div>
+      <div class="scores">
+        <div class="score-item">
+          <div class="s-num ${sc(r.viabilityScore)}">${r.viabilityScore}<span style="font-size:18px;opacity:.5">/10</span></div>
+          <div class="s-label">Viability</div>
+        </div>
+        <div class="score-item">
+          <div class="s-num ${sc(r.marketScore)}">${r.marketScore}<span style="font-size:18px;opacity:.5">/10</span></div>
+          <div class="s-label">Market</div>
+        </div>
+        <div class="score-item">
+          <div class="s-num ${sc(r.executionScore)}">${r.executionScore}<span style="font-size:18px;opacity:.5">/10</span></div>
+          <div class="s-label">Execution</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-label" style="margin-top:0;border-top:none">03 — ANALYSIS</div>
+
+    <div class="r-grid">
+      <div class="r-card">
+        <div class="r-card-label"><span>◎</span> Target Audience</div>
+        <ul class="r-list">${r.targetAudience.map(x=>`<li>${x}</li>`).join('')}</ul>
+      </div>
+      <div class="r-card">
+        <div class="r-card-label"><span>◈</span> Top Competitors</div>
+        <ul class="r-list">${r.topCompetitors.map(x=>`<li>${x}</li>`).join('')}</ul>
+      </div>
+      <div class="r-card">
+        <div class="r-card-label"><span>◬</span> Key Risks</div>
+        <ul class="r-list">${r.keyRisks.map(x=>`<li>${x}</li>`).join('')}</ul>
+      </div>
+      <div class="r-card">
+        <div class="r-card-label"><span>→</span> Go-to-Market</div>
+        <ul class="r-list">${r.goToMarket.map(x=>`<li>${x}</li>`).join('')}</ul>
+      </div>
+    </div>
+
+    <div class="r-full">
+      <div class="r-full-label">◐ Unique Angle & Defensibility</div>
+      <div class="r-full-body">${r.uniqueAngle}</div>
+    </div>
+
+    <div class="verdict">
+      <div class="verdict-label">✦ Analyst Verdict</div>
+      <div class="verdict-text">${r.verdict}</div>
+    </div>
+
+    <div class="reset-row">
+      <button class="reset-btn" onclick="resetApp()">← VALIDATE ANOTHER</button>
+      <span class="reset-note">GSSP-2025 / VALIDATE·AI</span>
+    </div>
+  `;
+  document.getElementById('report').classList.add('show');
+  document.getElementById('report').scrollIntoView({behavior:'smooth'});
+}
+
+function resetApp(){
+  document.getElementById('report').classList.remove('show');
+  document.getElementById('report').innerHTML='';
+  document.getElementById('input-section').style.display='block';
+  document.getElementById('idea-input').value='';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function showErr(m){const e=document.getElementById('error-box');e.textContent=m;e.classList.add('show')}
+function hideErr(){document.getElementById('error-box').classList.remove('show')}
+</script>
+</body>
+</html>
